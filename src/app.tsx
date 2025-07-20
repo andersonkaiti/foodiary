@@ -9,6 +9,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
 import { View } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { DateSwitcher } from './components/date-switcher'
 import { HomeHeader } from './components/home-header'
 import './styles/globals.css'
 
@@ -36,6 +37,7 @@ export default function App() {
     <View className="flex-1 bg-white">
       <SafeAreaProvider>
         <HomeHeader />
+        <DateSwitcher />
       </SafeAreaProvider>
     </View>
   )
