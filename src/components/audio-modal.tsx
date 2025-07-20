@@ -1,3 +1,11 @@
+import {
+  AudioModule,
+  RecordingPresets,
+  setAudioModeAsync,
+  useAudioPlayer,
+  useAudioRecorder,
+  useAudioRecorderState,
+} from 'expo-audio'
 import { StatusBar } from 'expo-status-bar'
 import {
   CheckIcon,
@@ -8,8 +16,8 @@ import {
   Trash2Icon,
   XIcon,
 } from 'lucide-react-native'
-import { useState } from 'react'
-import { Modal, Text, View } from 'react-native'
+import { useEffect, useState } from 'react'
+import { Alert, Modal, Text, View } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import { colors } from '../styles/colors'
 import { cn } from '../utils/cn'
@@ -21,36 +29,43 @@ interface IAudioModalProps {
 }
 
 export function AudioModal({ onClose, open }: IAudioModalProps) {
-  const [isRecording, setIsRecording] = useState(false)
   const [audioUri, setAudioUri] = useState<null | string>(null)
-  const [isPlaying, setIsPlaying] = useState(false)
 
-  function handleStartRecording() {
-    setIsRecording(true)
+  const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY)
+  const { isRecording } = useAudioRecorderState(audioRecorder)
+
+  const player = useAudioPlayer(audioUri)
+
+  useEffect(() => {
+    ;(async () => {
+      const status = await AudioModule.requestRecordingPermissionsAsync()
+      if (!status.granted) {
+        Alert.alert('A permissão para acessar o microfone foi negada.')
+      }
+
+      setAudioModeAsync({
+        playsInSilentMode: true,
+        allowsRecording: true,
+      })
+    })()
+  }, [])
+
+  async function handleStartRecording() {
+    await audioRecorder.prepareToRecordAsync()
+    audioRecorder.record()
   }
 
-  function handleStopRecording() {
-    setIsRecording(false)
-    setAudioUri('mock-audio-uri')
-  }
-
-  function handlePlay() {
-    setIsPlaying(true)
-  }
-
-  function handlePause() {
-    setIsPlaying(false)
+  async function handleStopRecording() {
+    await audioRecorder.stop()
+    setAudioUri(audioRecorder.uri)
   }
 
   function handleDeleteAudio() {
     setAudioUri(null)
-    setIsPlaying(false)
   }
 
   function handleCloseModal() {
     setAudioUri(null)
-    setIsRecording(false)
-    setIsPlaying(false)
     onClose()
   }
 
@@ -131,13 +146,21 @@ export function AudioModal({ onClose, open }: IAudioModalProps) {
                   <Trash2Icon color={colors.gray[500]} size={20} />
                 </Button>
 
-                {!isPlaying && (
-                  <Button color="dark" onPress={handlePlay} size="icon">
+                {!player.playing && (
+                  <Button
+                    color="dark"
+                    onPress={() => player.play()}
+                    size="icon"
+                  >
                     <PlayIcon color={colors.lime[600]} size={20} />
                   </Button>
                 )}
-                {isPlaying && (
-                  <Button color="dark" onPress={handlePause} size="icon">
+                {player.playing && (
+                  <Button
+                    color="dark"
+                    onPress={() => player.pause()}
+                    size="icon"
+                  >
                     <PauseIcon color={colors.lime[600]} size={20} />
                   </Button>
                 )}
