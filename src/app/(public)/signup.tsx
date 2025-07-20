@@ -3,7 +3,7 @@ import { router } from 'expo-router'
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react-native'
 import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { View } from 'react-native'
+import { Alert, View } from 'react-native'
 import { AuthLayout } from '../../components/auth-layout'
 import { Button } from '../../components/button'
 import { ActivityLevelStep } from '../../components/sign-up-steps/activity-level-step'
@@ -14,6 +14,7 @@ import { GoalStep } from '../../components/sign-up-steps/goal-step'
 import { HeightStep } from '../../components/sign-up-steps/height-step'
 import { schema } from '../../components/sign-up-steps/sign-up-schema'
 import { WeightStep } from '../../components/sign-up-steps/weight-step'
+import { useAuth } from '../../hooks/use-auth'
 import { colors } from '../../styles/colors'
 
 export default function SignUp() {
@@ -85,7 +86,32 @@ export default function SignUp() {
     setCurrentStepIndex((prevState) => prevState + 1)
   }
 
+  const { signUp } = useAuth()
+
+  const handleSubmit = form.handleSubmit(async (formData) => {
+    try {
+      const [day, month, year] = formData.birthDate.split('/')
+
+      await signUp({
+        height: Number(formData.height),
+        weight: Number(formData.weight),
+        activityLevel: Number(formData.activityLevel),
+        gender: formData.gender,
+        goal: formData.goal,
+        birthDate: `${year}-${month}-${day}`,
+        account: {
+          email: formData.email,
+          name: formData.name,
+          password: formData.password,
+        },
+      })
+    } catch {
+      Alert.alert('Erro ao criar a conta. Tente novamente.')
+    }
+  })
+
   const currentStep = steps[currentStepIndex]
+  const isLastStep = currentStepIndex === steps.length - 1
 
   return (
     <AuthLayout
@@ -104,16 +130,15 @@ export default function SignUp() {
           <ArrowLeftIcon color={colors.black['700']} size={20} />
         </Button>
 
-        <Button
-          className={currentStepIndex === steps.length - 1 ? 'flex-1' : ''}
-          onPress={handleNextStep}
-        >
-          {currentStepIndex === steps.length - 1 ? (
-            'Criar conta'
-          ) : (
+        {isLastStep ? (
+          <Button className="flex-1" onPress={handleSubmit}>
+            Criar conta
+          </Button>
+        ) : (
+          <Button onPress={handleNextStep} size="icon">
             <ArrowRightIcon color={colors.black['700']} size={20} />
-          )}
-        </Button>
+          </Button>
+        )}
       </View>
     </AuthLayout>
   )

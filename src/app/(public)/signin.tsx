@@ -2,11 +2,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { router } from 'expo-router'
 import { ArrowLeftIcon } from 'lucide-react-native'
 import { Controller, useForm } from 'react-hook-form'
-import { View } from 'react-native'
+import { Alert, View } from 'react-native'
 import z from 'zod'
 import { AuthLayout } from '../../components/auth-layout'
 import { Button } from '../../components/button'
 import { Input } from '../../components/input'
+import { useAuth } from '../../hooks/use-auth'
 import { colors } from '../../styles/colors'
 
 const schema = z.object({
@@ -23,8 +24,15 @@ export default function SignIn() {
     },
   })
 
-  const handleSubmit = form.handleSubmit((formData) => {
-    console.log(JSON.stringify(formData, null, 2))
+  const { signIn } = useAuth()
+
+  const handleSubmit = form.handleSubmit(async (formData) => {
+    try {
+      await signIn(formData)
+    } catch (error) {
+      console.log(error)
+      Alert.alert('Credenciais inválidas!')
+    }
   })
 
   return (
