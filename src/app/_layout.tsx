@@ -5,6 +5,7 @@ import {
   HostGrotesk_700Bold,
   useFonts,
 } from '@expo-google-fonts/host-grotesk'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SplashScreen, Stack } from 'expo-router'
 import { useEffect } from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -14,12 +15,16 @@ import '../styles/globals.css'
 
 SplashScreen.preventAutoHideAsync()
 
+const queryClient = new QueryClient()
+
 export default function Layout() {
   return (
     <SafeAreaProvider>
-      <AuthProvider>
-        <RootLayout />
-      </AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <RootLayout />
+        </AuthProvider>
+      </QueryClientProvider>
     </SafeAreaProvider>
   )
 }
