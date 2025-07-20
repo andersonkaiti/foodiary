@@ -25,7 +25,7 @@ export function Button({
   )
 
   return (
-    <View className={cn('overflow-hidden', className)}>
+    <View className={cn('overflow-hidden rounded-xl', className)}>
       <Pressable
         android_ripple={{
           color:
