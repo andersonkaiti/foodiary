@@ -37,13 +37,21 @@ export function OptionsSelector({
             <Text>{option.icon}</Text>
           </View>
 
-          <View>
-            <Text className="font-sans-semibold text-base text-black-700">
+          <View className="flex-1 pr-4">
+            <Text
+              className="font-sans-semibold text-base text-black-700"
+              ellipsizeMode="tail"
+              numberOfLines={1}
+            >
               {option.title}
             </Text>
 
             {option.description && (
-              <Text className="font-sans-regular text-gray-700 text-sm">
+              <Text
+                className="font-sans-regular text-gray-700 text-sm"
+                ellipsizeMode="tail"
+                numberOfLines={2}
+              >
                 {option.description}
               </Text>
             )}

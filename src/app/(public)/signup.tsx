@@ -6,9 +6,14 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { View } from 'react-native'
 import { AuthLayout } from '../../components/auth-layout'
 import { Button } from '../../components/button'
+import { ActivityLevelStep } from '../../components/sign-up-steps/activity-level-step'
+import { BirthDateStep } from '../../components/sign-up-steps/birth-date-step'
+import { FinalStep } from '../../components/sign-up-steps/final-step'
 import { GenderStep } from '../../components/sign-up-steps/gender-step'
 import { GoalStep } from '../../components/sign-up-steps/goal-step'
+import { HeightStep } from '../../components/sign-up-steps/height-step'
 import { schema } from '../../components/sign-up-steps/sign-up-schema'
+import { WeightStep } from '../../components/sign-up-steps/weight-step'
 import { colors } from '../../styles/colors'
 
 export default function SignUp() {
@@ -31,6 +36,36 @@ export default function SignUp() {
       subtitle: 'Seu gênero influencia no tipo da dieta',
       Component: GenderStep,
     },
+    {
+      icon: '🎂',
+      title: 'Qual sua data de nascimento?',
+      subtitle: 'Precisamos saber sua idade para personalizar seu plano',
+      Component: BirthDateStep,
+    },
+    {
+      icon: '📏',
+      title: 'Qual sua altura?',
+      subtitle: 'Isso nos ajudará a calcular suas necessidades nutricionais',
+      Component: HeightStep,
+    },
+    {
+      icon: '⚖️',
+      title: 'Qual seu peso atual?',
+      subtitle: 'Precisamos saber seu peso para personalizar seu plano',
+      Component: WeightStep,
+    },
+    {
+      icon: '🏃',
+      title: 'Qual seu nível de atividade?',
+      subtitle: 'Isso nos ajudará a calcular suas necessidades nutricionais',
+      Component: ActivityLevelStep,
+    },
+    {
+      icon: '👤',
+      title: 'Crie sua conta',
+      subtitle: 'Insira seus dados para finalizar o cadastro',
+      Component: FinalStep,
+    },
   ]
 
   function handlePreviousStep() {
@@ -43,6 +78,10 @@ export default function SignUp() {
   }
 
   function handleNextStep() {
+    if (currentStepIndex === steps.length - 1) {
+      // TODO: Implement account creation logic
+      return
+    }
     setCurrentStepIndex((prevState) => prevState + 1)
   }
 
@@ -65,8 +104,15 @@ export default function SignUp() {
           <ArrowLeftIcon color={colors.black['700']} size={20} />
         </Button>
 
-        <Button onPress={handleNextStep} size="icon">
-          <ArrowRightIcon color={colors.black['700']} size={20} />
+        <Button
+          className={currentStepIndex === steps.length - 1 ? 'flex-1' : ''}
+          onPress={handleNextStep}
+        >
+          {currentStepIndex === steps.length - 1 ? (
+            'Criar conta'
+          ) : (
+            <ArrowRightIcon color={colors.black['700']} size={20} />
+          )}
         </Button>
       </View>
     </AuthLayout>

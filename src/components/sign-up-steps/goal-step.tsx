@@ -3,15 +3,15 @@ import { OptionsSelector } from '../options-selector'
 import type { SignUpFormData } from './sign-up-schema'
 
 export function GoalStep() {
-  const form = useFormContext<SignUpFormData>()
+  const { control } = useFormContext<SignUpFormData>()
 
   return (
     <Controller
-      control={form.control}
+      control={control}
       name="goal"
-      render={({ field }) => (
+      render={({ field: { onChange, value } }) => (
         <OptionsSelector
-          onChange={field.onChange}
+          onChange={onChange}
           options={[
             {
               icon: '🥦',
@@ -29,7 +29,7 @@ export function GoalStep() {
               value: 'gain',
             },
           ]}
-          value={field.value}
+          value={value}
         />
       )}
     />
