@@ -63,41 +63,41 @@ export function DailyStats({
 }: IGoalArcsProps) {
   return (
     <View className="items-center justify-center">
-      <View className="relative min-h-[172px] items-center">
+      <View className="relative h-fit items-center">
         <Arc
           color="#FF5736"
           percentage={calcMacroPercentage(calories)}
-          radius={160}
-          strokeWidth={12}
+          radius={140}
+          strokeWidth={10}
         />
         <Arc
           className="absolute top-[20]"
           color="#2A9D90"
           percentage={calcMacroPercentage(proteins)}
-          radius={140}
-          strokeWidth={12}
+          radius={120}
+          strokeWidth={10}
         />
         <Arc
           className="absolute top-[40]"
           color="#E8C468"
           percentage={calcMacroPercentage(carbohydrates)}
-          radius={120}
-          strokeWidth={12}
+          radius={100}
+          strokeWidth={10}
         />
         <Arc
           className="absolute top-[60]"
           color="#F4A462"
           percentage={calcMacroPercentage(fats)}
-          radius={100}
-          strokeWidth={12}
+          radius={80}
+          strokeWidth={10}
         />
 
-        <View className="-mt-16 items-center justify-center">
+        <View className="-mt-16 items-center justify-center p-2">
           <Text>
-            <Text className="font-sans-bold text-support-tomato text-xl">
+            <Text className="font-sans-bold text-base text-support-tomato">
               {Math.round(calories.current)}
             </Text>
-            <Text className="text-base text-gray-700"> / {calories.goal}</Text>
+            <Text className="text-gray-700 text-sm"> / {calories.goal}</Text>
           </Text>
 
           <Text className="mt-1 text-center font-sans-regular text-gray-700 text-sm">
@@ -106,7 +106,7 @@ export function DailyStats({
         </View>
       </View>
 
-      <View className="w-full flex-row items-center justify-between p-4">
+      <View className="mt-2 w-full flex-row items-center justify-between py-4">
         <View className="w-1/3 items-center justify-center">
           <Text className="font-sans-bold text-base text-support-teal">
             {Math.round(proteins.current)}g

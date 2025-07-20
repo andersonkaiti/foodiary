@@ -4,7 +4,7 @@ import { colors } from '../styles/colors'
 
 export function DateSwitcher() {
   return (
-    <View className="mt-3 flex-row items-center justify-between px-2">
+    <View className="flex-row items-center justify-between px-2">
       <TouchableOpacity className="size-12 items-center justify-center">
         <ChevronLeftIcon color={colors.black[700]} size={20} />
       </TouchableOpacity>

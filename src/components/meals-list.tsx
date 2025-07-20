@@ -1,20 +1,36 @@
-import { Text, View } from 'react-native'
+import { FlatList } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { MealCard } from './meal-card'
+import { MealsListHeader } from './meals-list-header'
+
+const meals = [
+  {
+    id: String(Math.random()),
+    name: 'Café da manhã',
+  },
+  {
+    id: String(Math.random()),
+    name: 'Almoço',
+  },
+  {
+    id: String(Math.random()),
+    name: 'Janta',
+  },
+]
 
 export function MealsList() {
-  return (
-    <View className="p-5">
-      <Text className="font-sans-medium text-base text-black-700 tracking-[1.28px]">
-        Refeições
-      </Text>
+  const { bottom } = useSafeAreaInsets()
 
-      <View className="mt-4 gap-8">
-        <MealCard />
-        <MealCard />
-        <MealCard />
-        <MealCard />
-        <MealCard />
-      </View>
-    </View>
+  return (
+    <FlatList
+      contentContainerClassName="gap-8 p-5"
+      contentContainerStyle={{ paddingBottom: 80 + bottom + 16 }}
+      data={meals}
+      keyExtractor={(meal) => meal.id}
+      ListHeaderComponent={MealsListHeader}
+      renderItem={({ item: meal }) => (
+        <MealCard id={meal.id} name={meal.name} />
+      )}
+    />
   )
 }
