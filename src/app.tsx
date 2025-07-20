@@ -9,10 +9,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
 import { View } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { DailyStats } from './components/daily-stats'
-import { DateSwitcher } from './components/date-switcher'
-import { HomeHeader } from './components/home-header'
-import { MealsList } from './components/meals-list'
+import { Home } from './screens/home'
 import './styles/globals.css'
 
 SplashScreen.preventAutoHideAsync()
@@ -38,32 +35,7 @@ export default function App() {
   return (
     <View className="flex-1 bg-white">
       <SafeAreaProvider>
-        <HomeHeader />
-        <DateSwitcher />
-        <View className="mt-2">
-          <DailyStats
-            calories={{
-              current: 500,
-              goal: 2500,
-            }}
-            carbohydrates={{
-              current: 500,
-              goal: 2500,
-            }}
-            fats={{
-              current: 500,
-              goal: 2500,
-            }}
-            proteins={{
-              current: 500,
-              goal: 2500,
-            }}
-          />
-        </View>
-
-        <View className="mt-2 h-px bg-gray-200" />
-
-        <MealsList />
+        <Home />
       </SafeAreaProvider>
     </View>
   )
