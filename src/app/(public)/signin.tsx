@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { isAxiosError } from 'axios'
 import { router } from 'expo-router'
 import { ArrowLeftIcon } from 'lucide-react-native'
 import { Controller, useForm } from 'react-hook-form'
@@ -30,7 +31,9 @@ export default function SignIn() {
     try {
       await signIn(formData)
     } catch (error) {
-      console.log(error)
+      if (isAxiosError(error)) {
+        console.log(JSON.stringify(error.response?.data, null, 2))
+      }
       Alert.alert('Credenciais inválidas!')
     }
   })
@@ -82,7 +85,11 @@ export default function SignIn() {
           <Button color="gray" onPress={router.back} size="icon">
             <ArrowLeftIcon color={colors.black['700']} size={20} />
           </Button>
-          <Button className="flex-1" onPress={handleSubmit}>
+          <Button
+            className="flex-1"
+            loading={form.formState.isSubmitting}
+            onPress={handleSubmit}
+          >
             Entrar
           </Button>
         </View>
