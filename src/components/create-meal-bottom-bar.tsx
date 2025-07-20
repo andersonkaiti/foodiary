@@ -4,11 +4,13 @@ import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { AudioModal } from './audio-modal'
 import { Button } from './button'
+import { CameraModal } from './camera-modal'
 
 export function CreateMealBottomBar() {
   const { bottom } = useSafeAreaInsets()
 
   const [isAudioModalOpen, setIsAudioModalOpen] = useState(false)
+  const [isPictureModalOpen, setIsPictureModalOpen] = useState(false)
 
   return (
     <View
@@ -23,13 +25,22 @@ export function CreateMealBottomBar() {
         <MicIcon />
       </Button>
 
-      <Button color="gray" size="icon">
+      <Button
+        color="gray"
+        onPress={() => setIsPictureModalOpen(true)}
+        size="icon"
+      >
         <CameraIcon />
       </Button>
 
       <AudioModal
         onClose={() => setIsAudioModalOpen(false)}
         open={isAudioModalOpen}
+      />
+
+      <CameraModal
+        onClose={() => setIsPictureModalOpen(false)}
+        open={isPictureModalOpen}
       />
     </View>
   )
