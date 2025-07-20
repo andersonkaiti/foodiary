@@ -1,28 +1,31 @@
 import { Text, View } from 'react-native'
+import { useAuth } from '../hooks/use-auth'
 import { DailyStats } from './daily-stats'
 import { DateSwitcher } from './date-switcher'
 
 export function MealsListHeader() {
+  const { user } = useAuth()
+
   return (
     <View>
       <DateSwitcher />
       <View className="mt-2">
         <DailyStats
           calories={{
-            current: 500,
-            goal: 2500,
+            current: 0,
+            goal: user!.calories,
           }}
           carbohydrates={{
-            current: 500,
-            goal: 2500,
+            current: 0,
+            goal: user!.carbohydrates,
           }}
           fats={{
-            current: 500,
-            goal: 2500,
+            current: 0,
+            goal: user!.fats,
           }}
           proteins={{
-            current: 500,
-            goal: 2500,
+            current: 0,
+            goal: user!.proteins,
           }}
         />
       </View>
