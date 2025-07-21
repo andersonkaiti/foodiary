@@ -1,3 +1,4 @@
+import { useMutation } from '@tanstack/react-query'
 import {
   AudioModule,
   RecordingPresets,
@@ -19,6 +20,7 @@ import {
 import { useEffect, useState } from 'react'
 import { Alert, Modal, Text, View } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
+import { httpClient } from '../services/http-client'
 import { colors } from '../styles/colors'
 import { cn } from '../utils/cn'
 import { Button } from './button'
@@ -35,6 +37,28 @@ export function AudioModal({ onClose, open }: IAudioModalProps) {
   const { isRecording } = useAudioRecorderState(audioRecorder)
 
   const player = useAudioPlayer(audioUri)
+
+  const { mutateAsync: createMeal } = useMutation({
+    mutationFn: async (uri: string) => {
+      const { data } = await httpClient.post('/create-meal', {
+        fileType: 'audio/m4a',
+      })
+
+      const { uploadURL } = data
+
+      const response = await fetch(uri)
+
+      const file = await response.blob()
+
+      await fetch(uploadURL, {
+        method: 'PUT',
+        body: file,
+        headers: {
+          'Content-Type': file.type,
+        },
+      })
+    },
+  })
 
   useEffect(() => {
     ;(async () => {
@@ -165,7 +189,7 @@ export function AudioModal({ onClose, open }: IAudioModalProps) {
                   </Button>
                 )}
 
-                <Button size="icon">
+                <Button onPress={() => createMeal(audioUri)} size="icon">
                   <CheckIcon color={colors.black[700]} size={20} />
                 </Button>
               </View>
