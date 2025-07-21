@@ -78,7 +78,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const { mutateAsync: signIn } = useMutation({
     mutationFn: async (params: SignInParams) => {
-      const { data: accessToken } = await httpClient.post('/signin', params)
+      const {
+        data: { accessToken },
+      } = await httpClient.post('/signin', params)
 
       setToken(accessToken)
 
