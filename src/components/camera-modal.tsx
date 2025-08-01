@@ -4,6 +4,7 @@ import { CameraIcon, CheckIcon, Trash2Icon, XIcon } from 'lucide-react-native'
 import { useRef, useState } from 'react'
 import { Image, Modal, Text, View } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
+import { useCreateMeal } from '../hooks/use-create-meal'
 import { colors } from '../styles/colors'
 import { Button } from './button'
 
@@ -17,6 +18,10 @@ export function CameraModal({ onClose, open }: ICameraModalProps) {
   const [permission, requestPermission] = useCameraPermissions()
 
   const cameraRef = useRef<CameraView>(null)
+
+  const { createMeal } = useCreateMeal({
+    fileType: 'image/jpeg',
+  })
 
   function handleCloseModal() {
     onClose()
@@ -105,7 +110,7 @@ export function CameraModal({ onClose, open }: ICameraModalProps) {
                   <Button color="dark" onPress={handleDeletePhoto} size="icon">
                     <Trash2Icon color={colors.gray[500]} size={20} />
                   </Button>
-                  <Button size="icon">
+                  <Button onPress={() => createMeal(photoUri)} size="icon">
                     <CheckIcon color={colors.black[700]} size={20} />
                   </Button>
                 </View>
