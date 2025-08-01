@@ -7,7 +7,7 @@ export default function MealDetails() {
 
   return (
     <View className="flex-1 items-center justify-center">
-      <Text>Detalhes da refeição: {mealId}</Text>
+      <Text className="text-center">Detalhes da refeição: {mealId}</Text>
 
       <Button onPress={router.back}>Voltar</Button>
     </View>

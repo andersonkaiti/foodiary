@@ -9,10 +9,11 @@ type CreateMealResponse = {
 
 type CreateMealParams = {
   fileType: 'image/jpeg' | 'audio/m4a'
+  onSuccess(mealId: string): void
 }
 
-export function useCreateMeal({ fileType }: CreateMealParams) {
-  const { mutateAsync } = useMutation({
+export function useCreateMeal({ fileType, onSuccess }: CreateMealParams) {
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: async (uri: string) => {
       const { data } = await httpClient.post<CreateMealResponse>(
         '/create-meal',
@@ -25,10 +26,18 @@ export function useCreateMeal({ fileType }: CreateMealParams) {
         httpMethod: 'PUT',
         uploadType: FileSystem.FileSystemUploadType.BINARY_CONTENT,
       })
+
+      return {
+        mealId: data.mealId,
+      }
+    },
+    onSuccess: ({ mealId }) => {
+      onSuccess(mealId)
     },
   })
 
   return {
     createMeal: mutateAsync,
+    loading: isPending,
   }
 }

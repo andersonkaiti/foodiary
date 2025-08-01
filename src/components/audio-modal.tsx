@@ -6,6 +6,7 @@ import {
   useAudioRecorder,
   useAudioRecorderState,
 } from 'expo-audio'
+import { router } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import {
   CheckIcon,
@@ -37,8 +38,12 @@ export function AudioModal({ onClose, open }: IAudioModalProps) {
 
   const player = useAudioPlayer(audioUri)
 
-  const { createMeal } = useCreateMeal({
+  const { createMeal, loading } = useCreateMeal({
     fileType: 'audio/m4a',
+    onSuccess: (mealId) => {
+      router.push(`/meals/${mealId}`)
+      handleCloseModal()
+    },
   })
 
   useEffect(() => {
@@ -170,7 +175,11 @@ export function AudioModal({ onClose, open }: IAudioModalProps) {
                   </Button>
                 )}
 
-                <Button onPress={() => createMeal(audioUri)} size="icon">
+                <Button
+                  loading={loading}
+                  onPress={() => createMeal(audioUri)}
+                  size="icon"
+                >
                   <CheckIcon color={colors.black[700]} size={20} />
                 </Button>
               </View>
