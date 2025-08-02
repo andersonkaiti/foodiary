@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { useMemo, useState } from 'react'
 import { FlatList, Text } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { httpClient } from '../services/http-client'
@@ -23,18 +24,45 @@ type Meals = {
 export function MealsList() {
   const { bottom } = useSafeAreaInsets()
 
+  const [currentDate, setCurrentDate] = useState(new Date())
+
+  const dateParam = useMemo(() => {
+    const year = currentDate.getFullYear()
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0')
+    const date = String(currentDate.getDate()).padStart(2, '0')
+
+    return `${year}-${month}-${date}`
+  }, [currentDate])
+
   const { data: meals } = useQuery({
-    queryKey: ['meals'],
+    queryKey: ['meals', dateParam],
+    staleTime: 15_000,
     queryFn: async () => {
       const { data } = await httpClient.get<{ meals: Meals[] }>('/meals', {
         params: {
-          date: new Date().toISOString().split('T')[0],
+          date: dateParam,
         },
       })
 
       return data
     },
   })
+
+  function handlePreviousDate() {
+    setCurrentDate((prevState) => {
+      const newDate = new Date(prevState)
+      newDate.setDate(newDate.getDate() - 1)
+      return newDate
+    })
+  }
+
+  function handleNextDate() {
+    setCurrentDate((prevState) => {
+      const newDate = new Date(prevState)
+      newDate.setDate(newDate.getDate() + 1)
+      return newDate
+    })
+  }
 
   return (
     <FlatList
@@ -43,7 +71,13 @@ export function MealsList() {
       data={meals?.meals ?? []}
       keyExtractor={(meal) => meal.id}
       ListEmptyComponent={<Text>Nenhuma refeição cadastrada...</Text>}
-      ListHeaderComponent={MealsListHeader}
+      ListHeaderComponent={() => (
+        <MealsListHeader
+          currentDate={currentDate}
+          onNextDate={handleNextDate}
+          onPreviousDate={handlePreviousDate}
+        />
+      )}
       renderItem={({ item: meal }) => (
         <MealCard id={meal.id} name={meal.name} />
       )}

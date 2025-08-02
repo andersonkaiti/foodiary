@@ -3,12 +3,26 @@ import { useAuth } from '../hooks/use-auth'
 import { DailyStats } from './daily-stats'
 import { DateSwitcher } from './date-switcher'
 
-export function MealsListHeader() {
+interface IMealsListHeaderProps {
+  currentDate: Date
+  onPreviousDate(): void
+  onNextDate(): void
+}
+
+export function MealsListHeader({
+  onPreviousDate,
+  onNextDate,
+  currentDate,
+}: IMealsListHeaderProps) {
   const { user } = useAuth()
 
   return (
     <View>
-      <DateSwitcher />
+      <DateSwitcher
+        currentDate={currentDate}
+        onNextDate={onNextDate}
+        onPreviousDate={onPreviousDate}
+      />
       <View className="mt-2">
         <DailyStats
           calories={{
