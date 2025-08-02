@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
-import { useMemo, useState } from 'react'
+import { useFocusEffect } from 'expo-router'
+import { useCallback, useMemo, useState } from 'react'
 import { FlatList, Text } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { httpClient } from '../services/http-client'
 import { MealCard } from './meal-card'
 import { MealsListHeader } from './meals-list-header'
 
-type Meals = {
+type Meal = {
   name: string
   id: string
   icon: string
@@ -34,11 +35,11 @@ export function MealsList() {
     return `${year}-${month}-${date}`
   }, [currentDate])
 
-  const { data: meals } = useQuery({
+  const { data: meals, refetch } = useQuery({
     queryKey: ['meals', dateParam],
     staleTime: 15_000,
     queryFn: async () => {
-      const { data } = await httpClient.get<{ meals: Meals[] }>('/meals', {
+      const { data } = await httpClient.get<{ meals: Meal[] }>('/meals', {
         params: {
           date: dateParam,
         },
@@ -47,6 +48,12 @@ export function MealsList() {
       return data
     },
   })
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch()
+    }, [refetch])
+  )
 
   function handlePreviousDate() {
     setCurrentDate((prevState) => {
@@ -74,12 +81,19 @@ export function MealsList() {
       ListHeaderComponent={() => (
         <MealsListHeader
           currentDate={currentDate}
+          meals={meals?.meals ?? []}
           onNextDate={handleNextDate}
           onPreviousDate={handlePreviousDate}
         />
       )}
       renderItem={({ item: meal }) => (
-        <MealCard id={meal.id} name={meal.name} />
+        <MealCard
+          createdAt={new Date(meal.createdAt)}
+          foods={meal.foods}
+          icon={meal.icon}
+          id={meal.id}
+          name={meal.name}
+        />
       )}
     />
   )

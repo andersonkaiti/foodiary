@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import * as FileSystem from 'expo-file-system'
 import { httpClient } from '../services/http-client'
 
@@ -13,6 +13,8 @@ type CreateMealParams = {
 }
 
 export function useCreateMeal({ fileType, onSuccess }: CreateMealParams) {
+  const queryClient = useQueryClient()
+
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (uri: string) => {
       const { data } = await httpClient.post<CreateMealResponse>(
@@ -33,6 +35,9 @@ export function useCreateMeal({ fileType, onSuccess }: CreateMealParams) {
     },
     onSuccess: ({ mealId }) => {
       onSuccess(mealId)
+      queryClient.refetchQueries({
+        queryKey: ['meals'],
+      })
     },
   })
 
