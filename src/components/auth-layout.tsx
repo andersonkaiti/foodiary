@@ -18,7 +18,7 @@ export function AuthLayout({
 
   return (
     <View className="flex-1">
-      <View className="flex-1 bg-white">
+      <View className="flex-1 bg-white pb-2">
         <View className="h-[98px] bg-lime-400" />
 
         <View className="-mt-6 mx-auto size-12 items-center justify-center rounded-xl border-2 border-lime-400 bg-white">

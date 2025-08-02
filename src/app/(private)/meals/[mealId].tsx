@@ -53,10 +53,10 @@ export default function MealDetails() {
   }
 
   return (
-    <View className="flex-1 items-center justify-center">
+    <View className="flex-1 items-center justify-center p-1">
       <Button onPress={router.back}>Voltar</Button>
 
-      <Text className="text-center">{JSON.stringify(meal, null, 2)}</Text>
+      <Text>{JSON.stringify(meal, null, 2)}</Text>
     </View>
   )
 }
