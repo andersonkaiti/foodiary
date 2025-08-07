@@ -1,5 +1,6 @@
 import axios from 'axios'
+import { env } from '../config/env'
 
 export const httpClient = axios.create({
-  baseURL: 'https://vrw6wyq25k.execute-api.us-east-1.amazonaws.com',
+  baseURL: env.EXPO_PUBLIC_API_URL,
 })
